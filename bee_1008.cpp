@@ -1,3 +1,4 @@
+// salario
 #include <iostream>
 #include <iomanip>
 
