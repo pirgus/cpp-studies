@@ -1,3 +1,0 @@
-/media/pirgus/files/cpp_studies/hello_world/CMakeFiles/HelloWorld.dir
-/media/pirgus/files/cpp_studies/hello_world/CMakeFiles/edit_cache.dir
-/media/pirgus/files/cpp_studies/hello_world/CMakeFiles/rebuild_cache.dir
