@@ -10,7 +10,7 @@ int main(){
 
     double new_salary = salary + (comms * 0.15);
 
-    std::cout << "TOTAL = " << std::setprecision(2) << std::fixed << new_salary << std::endl;
+    std::cout << "TOTAL = R$ " << std::setprecision(2) << std::fixed << new_salary << std::endl;
 
     return 0;
 }
