@@ -65,6 +65,8 @@ public:
     void print();
     int remove_v(int value);
     int add_at_end(int value);
+    int search(int value);
+    int search_ord(int value);
 };
 
 list_d::list_d(){
@@ -146,6 +148,44 @@ void list_d::print(){
     // std::cout << " ]" << std::endl;
 }
 
+// linear search: works for any kind of list: unordered or ordered, whatever!
+int list_d::search(int value){
+    int count = 0;
+    node *aux = head;
+    while(aux != nullptr){
+        if(aux->get_value() == value){
+            return count;
+        }
+        aux = aux->get_next();
+        count++;
+    }
+
+    return -1;
+}
+
+// search in an ordered list (ONLY WORKS IF LIST IS ORDERED!!!!!!)
+int list_d::search_ord(int value){
+    int count = 0;
+    node *aux = head;
+    while(aux != nullptr){
+        if(aux->get_value() > value || tail->get_value() < value){
+            // current element is greater than the value being searched, which in a ordered list means
+            // that this value doesn't exist
+            // also, if the last value of the ordered list is lesser than the value being search,
+            // it also means that the value is not present on the ordered list
+            return -1;
+        }
+        else if(aux->get_value() == value){
+            return count;
+        }
+
+        aux = aux->get_next();
+        count++;
+    }
+
+    return -1;
+}
+
 int list_d::remove_v(int value){
     node *aux = head;
     node *earlier;
@@ -190,16 +230,14 @@ int main(){
     int id;
     for(int i = 0; i < p_qtt; i++){
         std::cin >> id;
-        l->add_at_end(id);
+        l->add(id);
     }
     // l->print();
-    std::cin >> p_qtt;
-    for(int i = 0; i < p_qtt; i++){
-        std::cin >> id;
-        l->remove_v(id);
-    }
-
     l->print();
+    std::cout << "element found at " << l->search(5) << std::endl;
+
+    std::cout << "element found at (ordered search) " << l->search_ord(10) << std::endl;
+
 
     delete l;
     return 0;
