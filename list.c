@@ -63,7 +63,7 @@ int get_element(Lista lista, int pos){
 }
 
 int add_in_pos(Lista *l, int el, int pos){
-    if(l != NULL && pos < N && l->size < N){
+    if(l != NULL && pos <= l->size && l->size < N){
         int aux = el;
         while(pos < l->size+1){
             int obj = aux;
@@ -92,41 +92,44 @@ int set_el(Lista *l, int el, int pos){
 }
 
 int contains_el(Lista* l, int el){
-    for(int i = 0; i < l->size; i++){
-        if(l->data[i] == el){
-            return i;
+    if(l != NULL){
+        for(int i = 0; i < l->size; i++){
+            if(l->data[i] == el){
+                return i;
+            }
         }
     }
+
     return -1; // if element not found
 }
 
 int remove_el(Lista *l, int el){
     int counter = 0;
-    for(int i = 0; i < l->size; i++){
-        if(l->data[i] == el){
-            printf("found element\n");
-            if(i < l->size - 1){
-                int count = i;
-                while(count < l->size){
-                    l->data[count] = l->data[count + 1];
-                    count++;
-                }
-                l->size--;
-                return el;
+    int position = contains_el(l, el);
+    if(position > -1){
+        if(position < l->size - 1){
+            int count = position;
+            while(count < l->size){
+                l->data[count] = l->data[count + 1];
+                count++;
             }
-            else{
-                l->data[i] = -1;
-                l->size--;
-                return el;
-            }
+            l->size--;
+            return position;
+        }
+        else{
+            l->data[position] = -1;
+            l->size--;
+            return position;
         }
     }
-    printf("Element not found\n");
-    return -1;
+    else{
+        printf("Element not found\n");
+        return -1;
+    }
 }
 
 int remove_at_pos(Lista *l, int pos){
-    if(l != NULL && pos < l->size){
+    if(l != NULL && pos < l->size && pos >= 0){
         int element_removed = l->data[pos];
         while(pos < l->size){
             l->data[pos] = l->data[pos + 1];
@@ -142,11 +145,12 @@ int remove_at_pos(Lista *l, int pos){
 }
 
 void clear_list(Lista *l){
-    for(int i = 0; i < l->size; i++){
-        l->data[i] = -1;
+    if(l != NULL){
+        l->size = 0;
+        free(l);
+        l = NULL;   
+        printf("assigned null\n");
     }
-    l->size = 0;
-    free(l);
 }
 
 int main(){
@@ -155,19 +159,18 @@ int main(){
     int element, remove, position, new_el, search;
     
     char opc = 'C';
-    while(opc != 'S'){
+    while(opc != 'J'){
         printf("Choose what you'd like to do:\n");
         printf("A - Add to list\n");
         printf("B - Add to specific position\n");
         printf("C - Print list size\n");
         printf("D - Print list\n");
-        printf("E - Get element in position\n");
+        printf("E - Get element at position\n");
         printf("F - Set element at position\n");
         printf("G - Search for element\n");
         printf("H - Remove element\n");
         printf("I - Remove element at position\n");
-        printf("J - Clear list\n");
-        printf("S - Exit program\n");
+        printf("J - Clear list and Exit program\n");
     
         scanf("%c", &opc);
         switch(opc){
@@ -175,14 +178,14 @@ int main(){
                 printf("Insert element: \n");
                 scanf("%d", &element);
                 printf("New size after added el. = %d\n", add_to_list(element, lista));
-                getchar();
+                // getchar();
             break;
 
             case 'B':
                 printf("Insert element and position: \n");
                 scanf("%d", &element);
                 scanf("%d", &position);
-                printf("New size after added el. = %d\n", add_in_pos(lista, element, position));
+                printf("Added element = %d\n", add_in_pos(lista, element, position));
                 getchar();
 
             break;
@@ -248,6 +251,12 @@ int main(){
         getchar();
         system("clear");
     }
+
+    // printf("%p\n", lista);
+    // if(lista != NULL){
+    //     printf("List's pointer wasn't unallocated.\n");
+    //     clear_list(lista);
+    // }
 
     return 0;
 }
