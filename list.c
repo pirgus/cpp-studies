@@ -80,6 +80,19 @@ int add_in_pos(Lista *l, int el, int pos){
     }
 }
 
+int add_ordered(Lista *l, int el){
+    if(l->size < N){
+        int i;
+        for(i = l->size - 1; i >= 0 && l->data[i] > el; i--){
+            l->data[i + 1] = l->data[i];
+        }
+        l->data[i + 1] = el;
+        l->size++;
+        return i + 1;
+    }
+    return -1;
+}
+
 int set_el(Lista *l, int el, int pos){
     if(l != NULL && pos < l->size){
         l->data[pos] = el;
@@ -144,6 +157,29 @@ int remove_at_pos(Lista *l, int pos){
     }
 }
 
+int binary_search(Lista *l, int value){
+    int first_i = 0;
+    int last_i = l->size - 1;
+
+    while(last_i - first_i + 1 >= 1){
+        int middle_i = (first_i + last_i) / 2;
+
+        if(l->data[middle_i] == value){
+            return middle_i;
+        }
+
+        if(l->data[middle_i] < value){
+            first_i = middle_i + 1;
+        }
+
+        if(l->data[middle_i] > value){
+            last_i = middle_i - 1;
+        }
+    }
+
+    return -1;
+}
+
 void clear_list(Lista *l){
     if(l != NULL){
         l->size = 0;
@@ -159,7 +195,7 @@ int main(){
     int element, remove, position, new_el, search;
     
     char opc = 'C';
-    while(opc != 'J'){
+    while(opc != 'K'){
         printf("Choose what you'd like to do:\n");
         printf("A - Add to list\n");
         printf("B - Add to specific position\n");
@@ -168,9 +204,11 @@ int main(){
         printf("E - Get element at position\n");
         printf("F - Set element at position\n");
         printf("G - Search for element\n");
-        printf("H - Remove element\n");
-        printf("I - Remove element at position\n");
-        printf("J - Clear list and Exit program\n");
+        printf("H - Binary search for element (ordered list)\n");
+        printf("I - Remove element\n");
+        printf("J - Remove element at position\n");
+        printf("K - Clear list and Exit program\n");
+        printf("L - Add ordered\n");
     
         scanf("%c", &opc);
         switch(opc){
@@ -226,6 +264,13 @@ int main(){
             break;
 
             case 'H':
+                printf("Insert value to search: \n");
+                scanf("%d", &search);
+                printf("Result of binary search - %d\n", binary_search(lista, search));
+                getchar();
+            break;
+
+            case 'I':
                 printf("Choose value to remove: \n");
                 scanf("%d", &remove);
                 printf("Result of remove = %d\n", remove_el(lista, remove));
@@ -233,7 +278,7 @@ int main(){
 
             break;
 
-            case 'I':
+            case 'J':
                 printf("Choose position to remove: \n");
                 scanf("%d", &position);
                 printf("Result of remove = %d\n", remove_at_pos(lista, position));
@@ -241,11 +286,17 @@ int main(){
 
             break;
 
-            case 'J':
+            case 'K':
                 printf("Clearing list\n");
                 clear_list(lista);
                 printf("lista = %d ; lista size = %d\n", sizeof(lista), lista->size);
                 getchar();
+            break;
+
+            case 'L':
+                printf("Insert element: \n");
+                scanf("%d", &element);
+                printf("Result of ordered add: %d\n", add_ordered(lista, element));
             break;
         }
         getchar();

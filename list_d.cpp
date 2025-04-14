@@ -67,6 +67,7 @@ public:
     int add_at_end(int value);
     int search(int value);
     int search_ord(int value);
+    int add_ordered(int value);
 };
 
 list_d::list_d(){
@@ -133,19 +134,19 @@ void list_d::print(){
     node *aux;
     aux = head;
     int count = 0;
-    // std::cout << "[ ";
+    std::cout << "[ ";
     while(aux != nullptr){
         if(count < size - 1){
-            std::cout << aux->get_value() << " ";
+            std::cout << aux->get_value() << ", ";
         }
         else{
-            std::cout << aux->get_value() << std::endl;
+            std::cout << aux->get_value() << " ";
         }
 
         aux = aux->get_next();
         count++;
     }
-    // std::cout << " ]" << std::endl;
+    std::cout << " ]" << std::endl;
 }
 
 // linear search: works for any kind of list: unordered or ordered, whatever!
@@ -222,6 +223,49 @@ int list_d::remove_v(int value){
     return -1;
 }
 
+int list_d::add_ordered(int value){
+    if(size == 0){
+        add(value);
+        return 0;
+    }
+
+    node *aux = head;
+    int count = 0;
+    node *new_node = new node(value);
+    node *earlier = head;
+
+    // if it's lesser than the first element
+    // takes its place and it's now the new head
+    // if this first element was the only element on the list, we also update the tail
+    if(value < aux->get_value()){
+        new_node->set_next(aux);
+        head = new_node;
+        if(size == 1){
+            tail = new_node;
+        }
+        size++;
+        return 0;
+    }
+    // it's not lesser than the first element, so we have to cover the rest of the list
+    else{
+        // while the aux isn't the last element and our value if greater than aux's next value
+        while(aux->get_next() != nullptr && value > aux->get_next()->get_value()){
+            aux = aux->get_next();
+            count++;
+        }
+        new_node->set_next(aux->get_next());
+        aux->set_next(new_node);
+        // if it's the new last element of the list, we update the tail
+        if(new_node->get_next() == nullptr){
+            tail = new_node;
+        }
+        size++;
+    }
+
+    return count;
+    
+}
+
 int main(){
     list_d *l = new list_d;
     
@@ -230,13 +274,15 @@ int main(){
     int id;
     for(int i = 0; i < p_qtt; i++){
         std::cin >> id;
-        l->add(id);
+        l->add_ordered(id);
+        l->print();
     }
     // l->print();
-    l->print();
-    std::cout << "element found at " << l->search(5) << std::endl;
+    std::cout << "element found at " << l->search(3) << std::endl;
 
-    std::cout << "element found at (ordered search) " << l->search_ord(10) << std::endl;
+    std::cout << "element found at (ordered search) " << l->search_ord(8) << std::endl;
+
+    std::cout << "list size = " << l->get_size() << std::endl;
 
 
     delete l;
